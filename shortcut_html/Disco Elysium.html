@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html style="background:#000">
+<head>
+  <meta charset="utf-8">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#000000">
+  <title>Launching...</title>
+  <link rel="icon" type="image/png" href="../shortcut_icon/632470.png">
+  <style>
+    html, body { background:#000; margin:0; height:100%; }
+    body { color:#888; font:14px sans-serif; padding:16px; box-sizing:border-box; }
+    #msg { white-space:pre-line; }
+  </style>
+</head>
+<body style="background:#000">
+<div id="msg"></div>
+<script>
+  var id = "632470";
+  var iconHref = "../shortcut_icon/632470.png";
+  var setup = location.search.indexOf("setup") >= 0;
+  var seen = false;
+  try { seen = !!localStorage.getItem("seen3_" + id); } catch (e) {}
+
+  function say(t) { document.getElementById("msg").textContent = t; }
+  function leave() { window.close(); history.back(); }
+  function launch() {
+    location.href = "steam://rungameid/" + id;
+    setTimeout(leave, 0);
+  }
+
+  if (!iconHref || (seen && !setup)) {
+    launch();
+  } else {
+    say("Saving icon...");
+    var img = new Image();
+    img.onload = function () {
+      try { localStorage.setItem("seen3_" + id, "1"); } catch (e) {}
+      setTimeout(launch, 3000);
+    };
+    img.onerror = function () {
+      say("Icon file not found:\n" + img.src + "\n\nUpload the shortcut_icon folder next to shortcut_html.");
+    };
+    img.src = iconHref;
+  }
+</script>
+</body>
+</html>
