@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html style="background:#000">
+<head>
+  <meta charset="utf-8">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#000000">
+  <title>Launching...</title>
+  <link rel="icon" type="image/png" href="../shortcut_icon/1245620.png">
+  <style>
+    html, body { background:#000; margin:0; height:100%; }
+  </style>
+</head>
+<body style="background:#000">
+<script>
+  var id = "1245620";
+  var first = location.search.indexOf("slow") >= 0;
+  try {
+    if (!localStorage.getItem("seen_" + id)) {
+      localStorage.setItem("seen_" + id, "1");
+      first = true;
+    }
+  } catch (e) {}
+
+  function leave() {
+    window.close();
+    history.back();
+  }
+
+  location.href = "steam://rungameid/" + id;
+
+  if (first) {
+    window.addEventListener("load", function () { setTimeout(leave, 2500); });
+  } else {
+    setTimeout(leave, 0);
+  }
+</script>
+</body>
+</html>
