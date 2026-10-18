@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html style="background:#000">
+<head>
+  <meta charset="utf-8">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#000000">
+  <title>Launching...</title>
+  <style>
+    html, body { background:#000; margin:0; height:100%; }
+    body { color:#888; font:14px sans-serif; padding:16px; box-sizing:border-box; }
+    #msg { white-space:pre-line; }
+  </style>
+</head>
+<body style="background:#000">
+<div id="msg"></div>
+<script>
+  var id = "3892270";
+  var hasIcon = 1;
+  var setup = location.search.indexOf("setup") >= 0;
+  var seen = false;
+  try { seen = !!localStorage.getItem("seen4_" + id); } catch (e) {}
+
+  function say(t) { document.getElementById("msg").textContent = t; }
+  function leave() { window.close(); history.back(); }
+  function launch() {
+    location.href = "steam://rungameid/" + id;
+    setTimeout(leave, 0);
+  }
+
+  var names = [
+    "../shortcut_icon/" + id + ".png",
+    "shortcut_icon/" + id + ".png",
+    id + ".png",
+    "../" + id + ".png"
+  ];
+  var tried = [];
+
+  function findIcon(i) {
+    if (i >= names.length) {
+      say("Icon file not found. Tried:\n" + tried.join("\n") +
+          "\n\nUpload the shortcut_icon folder (or the png files) to the same repository.\n" +
+          "Launching the game anyway...");
+      setTimeout(launch, 4000);
+      return;
+    }
+    var img = new Image();
+    img.onload = function () {
+      var link = document.createElement("link");
+      link.rel = "icon";
+      link.type = "image/png";
+      link.href = img.src;
+      document.head.appendChild(link);
+      try { localStorage.setItem("seen4_" + id, "1"); } catch (e) {}
+      setTimeout(launch, 3000);
+    };
+    img.onerror = function () { tried.push(img.src); findIcon(i + 1); };
+    img.src = names[i];
+  }
+
+  if (!hasIcon || (seen && !setup)) {
+    launch();
+  } else {
+    say("Saving icon...");
+    findIcon(0);
+  }
+</script>
+</body>
+</html>
